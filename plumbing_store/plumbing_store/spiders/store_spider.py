@@ -4,10 +4,14 @@ from bs4 import BeautifulSoup
 
 class StoreSpiderSpider(scrapy.Spider):
     name = 'store_spider'
-    allowed_domains = ['https://best-dim.com/ua/g4861238-santehnika']
-    start_urls = ['http://https://best-dim.com/ua/g4861238-santehnika/']
+    allowed_domains = ['best-dim.com']
+    #start_urls = ['https://best-dim.com/ua/g4861238-santehnika']
 
-    def parse(self, response):
+    def start_requests(self):
+        url = 'https://best-dim.com/ua/g4861238-santehnika'
+        yield scrapy.Request(url, self.parse_categories)
+
+    def parse_categories(self, response):
         category_urls = [
             'https://best-dim.com' + e.get() + '?product_items_per_page=48' for e in response.css(
                 'a.b-product-groups-gallery__image-link::attr(href)'
@@ -22,17 +26,20 @@ class StoreSpiderSpider(scrapy.Spider):
             item for item in response.css('a.b-centered-image.b-product-line__image-wrapper::attr(href)').getall()
         ]
         for product_url in products_urls:
-            yield response.follow(product_url, callback=self.parse_product)
+            yield response.follow(product_url, callback=self.parse)
 
         next_page = response.css('a.b-pager__link.b-pager__link_pos_last::attr(href)').get()
         if next_page:
             next_page = 'https://best-dim.com' + next_page + '?product_items_per_page=48'
             yield response.follow(next_page, callback=self.parse_category)
 
-    def pase_product(self, response):
+    def parse(self, response):
         product_image_url = response.css('img.b-centered-image__img::attr(src)').get()
 
-        product_code = response.css('span.b-product__sku::text').get()[5:]
+        try:
+            product_code = response.css('span.b-product__sku::text').get()[5:]
+        except BaseException:
+            product_code = ''
 
         product_name = response.css('h1.b-title::text').get()
 

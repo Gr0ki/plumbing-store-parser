@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 class StoreSpiderSpider(scrapy.Spider):
     name = 'store_spider'
     allowed_domains = ['best-dim.com']
-    #start_urls = ['https://best-dim.com/ua/g4861238-santehnika']
 
     def start_requests(self):
         url = 'https://best-dim.com/ua/g4861238-santehnika'
@@ -45,7 +44,7 @@ class StoreSpiderSpider(scrapy.Spider):
 
         product_status = response.css('span.b-product__state.b-product__state_type_available::text').get()
 
-        product_prise = response.css('li.b-order-info__item::text').getall()[1].strip()
+        product_prise = response.css('li.b-order-info__item::text').getall()[1].strip().replace('\xa0', '').replace(',', '')
 
         product_specifications = [
             elem.strip() for elem in response.css('td.b-product-info__cell::text').getall() if elem.strip()
@@ -54,7 +53,7 @@ class StoreSpiderSpider(scrapy.Spider):
         product_description = response.css('div.b-content__body.b-user-content').get()
         soup = BeautifulSoup(product_description)
         product_description = [i.get_text() for i in soup.find_all(string=True) if i.get_text()]
-        product_description = ' '.join(product_description[:len(product_description) - 1])
+        product_description = ' '.join(product_description[:len(product_description) - 1]).replace('\xa0', '').replace('\n', ' ')
 
         product_info = {
             'product image url': product_image_url,

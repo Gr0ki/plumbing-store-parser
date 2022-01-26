@@ -1,3 +1,4 @@
+# About this project:
 This is my training project for parsing data from web-sites.
 This project was build to parse a specific web-site: "https://best-dim.com/ua/g4861238-santehnika".
 
@@ -5,6 +6,7 @@ The scraper moves through all subcategories and all the pages to take info about
 
 # Parser commands (from ../plumbing_store/):
 "scrapy crawl store_spider" - to run parser and output result to a console
+
 "scrapy crawl store_spider -O store_spider.json" - to run parser and output result to a new json file
 (If such a file already exists, it will be overwritten. Use "-o" to append.)
 

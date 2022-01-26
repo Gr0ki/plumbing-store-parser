@@ -5,7 +5,7 @@ This project was build to parse a specific web-site: "https://best-dim.com/ua/g4
 The scraper moves through all subcategories and all the pages to take info about each product in the site tree from starting point.
 
 # Parser commands (from ../plumbing_store/):
-"scrapy crawl store_spider" - to run parser and output result to a console
+"scrapy runspider spiders/store_spider.py" - to run parser and output result to a console
 
 "scrapy crawl store_spider -O store_spider.json" - to run parser and output result to a new json file
 (If such a file already exists, it will be overwritten. Use "-o" to append.)
